@@ -88,6 +88,16 @@ public class JwtUtil implements Serializable {
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
 
     }
+    public boolean validateToken(String authToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+            return true;
+        } catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+            throw new BadCredentialsException("INVALID_CREDENTIALS", ex);
+        } catch (ExpiredJwtException ex) {
+            throw ex;
+        }
+    }
 
     public boolean validateToken(String authToken, UserDetails userDetails) {
         try {

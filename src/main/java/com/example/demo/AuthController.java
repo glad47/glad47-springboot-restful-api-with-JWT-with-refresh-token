@@ -29,10 +29,8 @@ public class AuthController {
         this.userRepositoryUserDetailsService=userRepositoryUserDetailsService;
     }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(path ="/login",consumes = "application/json")
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest jwtRequest) throws Exception{
-        System.out.println("i am hear my friend");
-
         try {
             this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     jwtRequest.getUsername(),jwtRequest.getPassword()));
@@ -50,15 +48,17 @@ public class AuthController {
     }
 
     @PostMapping(path ="/refreshtoken",consumes = "application/json")
-    public ResponseEntity<?> refreshtoken(@RequestBody JwtResponse jwtResponse) throws Exception {
+    public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
 
         //       Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
 //        String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-        String username=this.jwtTokenUtil.getUsernameFromToken(jwtResponse.getRefreshToken());
+        String ref=request.getAttribute("RefreshToken").toString();
+        System.out.println("55 authcontroler  refreshtoken" + ref );
+        String username=this.jwtTokenUtil.getUsernameFromToken( ref);
         final UserDetails userDetails= this.userRepositoryUserDetailsService
                 .loadUserByUsername(username);
         final String jwt=this.jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(jwt,jwtResponse.getRefreshToken()));
+        return ResponseEntity.ok(new JwtResponse(jwt,ref));
     }
 
 //    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -31,15 +32,17 @@ public class DDesignController {
 
 
     @GetMapping("/recent1")
-    public Iterable<Taco> recentTacos(){
+    public ResponseEntity<?> recentTacos(){
         PageRequest page=PageRequest.of(0,12, Sort.by("createdAt").descending());
-        return this.jpaTacoRepo.findAll(page).getContent();
+        return  ResponseEntity.ok(this.jpaTacoRepo.findAll(page).getContent());
     }
 
     @PostMapping(consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Taco processDesign(@RequestBody Taco taco){
-            return jpaTacoRepo.save(taco);
+    public ResponseEntity<?> processDesign(@RequestBody Taco taco){
+
+             jpaTacoRepo.save(taco);
+          return ResponseEntity.ok(taco);
 
     }
 
