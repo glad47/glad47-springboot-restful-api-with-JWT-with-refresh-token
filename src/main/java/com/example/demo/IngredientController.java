@@ -2,13 +2,14 @@ package com.example.demo;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping(produces = "application/json")
+@RequestMapping(path="ingredients",produces = "application/json")
 @CrossOrigin(origins = "*")
 public class IngredientController {
     private IngredientRepository ingredientRepo;
@@ -17,8 +18,20 @@ public class IngredientController {
        this.ingredientRepo=ingredientRepo;
     }
 
-    @GetMapping("/ingredients")
+    @GetMapping("/all")
     public Iterable<Ingredient> getIngredients(){
         return ingredientRepo.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getIngredientById(@PathVariable String id){
+        Optional<Ingredient> ingredientOpt=this.ingredientRepo.findById(id);
+        if(ingredientOpt.isPresent()){
+            return new ResponseEntity<>(ingredientOpt.get(), HttpStatus.OK);
+
+        }else{
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+
     }
 }
