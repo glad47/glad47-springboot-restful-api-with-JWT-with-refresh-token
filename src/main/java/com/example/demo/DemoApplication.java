@@ -1,12 +1,12 @@
 package com.example.demo;
 
+import com.example.demo.Model.Ingredient;
+import com.example.demo.Repository.IngredientRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import com.example.demo.Ingredient.Type;
+import com.example.demo.Model.Ingredient.Type;
 
 @SpringBootApplication
 public class DemoApplication{
